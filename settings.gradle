@@ -1,18 +1,12 @@
 pluginManagement {
     repositories {
-        // Tells Gradle to check Fabric's official server for the Loom plugin
         maven {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
-        // Fallback to standard plugins
+        mavenCentral() // Allows Gradle to search standard repositories for plugin helpers
         gradlePluginPortal()
     }
-}
-
-plugins {
-    // Loom requires the fabric-mixinextras helper in modern environments
-    id "io.github.llamalad7.mixinextras" version "0.4.1"
 }
 
 dependencyResolutionManagement {
