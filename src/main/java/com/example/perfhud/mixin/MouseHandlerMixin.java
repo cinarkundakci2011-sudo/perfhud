@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MouseHandler.class)
 public class MouseHandlerMixin {
     
-    // The exact signature requires: long window, int button, int action, int mods
-    @Inject(method = "onPress", at = @At("HEAD"))
+    // Changed method target from "onPress" to Fabric's runtime "onButton" name
+    @Inject(method = "onButton", at = @At("HEAD"))
     private void catchClick(long window, int button, int action, int mods, CallbackInfo ci) {
         // action == 1 represents a GLFW_PRESS event
         if (action == 1) {
