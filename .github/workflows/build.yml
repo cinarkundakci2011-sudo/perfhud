@@ -15,20 +15,20 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    # 2. Set up Java 25 (Required for Minecraft 26.2 compilation)
+    # 2. Set up JDK 25 (Required for Minecraft 26.2 compilation)
     - name: Set up JDK 25
       uses: actions/setup-java@v4
       with:
         java-version: '25'
         distribution: 'temurin'
 
-    # 3. Force GitHub to supply a modern version of Gradle directly
+    # 3. Use Gradle 9.2 which officially supports running under Java 25
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
       with:
-        gradle-version: '8.12'
+        gradle-version: '9.2'
 
-    # 4. Run the build process using the global 'gradle' command (no "./gradlew")
+    # 4. Run the build process
     - name: Build Mod File
       run: gradle build
 
