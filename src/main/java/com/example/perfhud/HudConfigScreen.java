@@ -22,7 +22,9 @@ public class HudConfigScreen extends Screen {
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         super.extractRenderState(graphics, mouseX, mouseY, delta);
         Minecraft mc = Minecraft.getInstance();
-        long window = mc.getWindow().getNativeWindow(); // Fixed to use modern handle getter
+        
+        // Ultimate Mapping Bypass: Pulls the handle directly from the active OpenGL render context
+        long window = GLFW.glfwGetCurrentContext(); 
 
         // Direct Input Polling
         boolean isMouseDown = GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
@@ -88,7 +90,7 @@ public class HudConfigScreen extends Screen {
     }
 
     @Override
-    public boolean isPauseScreen() { // Fixed mapping signature name
+    public boolean isPauseScreen() {
         return false;
     }
 }
