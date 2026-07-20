@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "perfhud",
+  "name": "Performance HUD",
+  "version": "${version}",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.example.perfhud.PerformanceHudClient"
+    ]
+  },
+  "mixins": [
+    "perfhud.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "minecraft": "26.2",
+    "fabric-api": "*"
+  }
+}
