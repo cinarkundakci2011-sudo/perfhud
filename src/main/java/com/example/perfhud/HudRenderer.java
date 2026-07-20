@@ -5,17 +5,28 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
-import com.example.perfhud.util.CpsTracker; // <-- Added this import to find your new tracker
+import com.example.perfhud.util.CpsTracker;
+import org.lwjgl.glfw.GLFW; // Added GLFW import
 
 public class HudRenderer {
+    private static boolean wasOPressed = false; // Add tracking field
 
-    // Removed the "implements HudElement" line; we are treating this as a pure functional method target
     public static void render(GuiGraphicsExtractor graphics, DeltaTracker tickCounter) {
         Minecraft mc = Minecraft.getInstance();
-        
-        // Fabric API automatically handles hiding this layer when the HUD is toggled via F1.
-        // We only need to check our custom toggle and player existence.
-        if (!HudConfig.enabled || mc.player == null) return;
+        if (mc.player == null) return;
+
+        // Native Hotkey Hook: Pressing 'O' opens the configuration editor screen smoothly
+        long windowHandle = mc.getWindow().getWindow();
+        boolean isOPressed = GLFW.glfwGetKey(windowHandle, GLFW.GLFW_KEY_O) == GLFW.GLFW_PRESS;
+        if (isOPressed && !wasOPressed) {
+            if (mc.screen == null) {
+                mc.setScreen(new HudConfigScreen());
+            }
+        }
+        wasOPressed = isOPressed;
+
+        // If configuration turned off the render execution, leave immediately
+        if (!HudConfig.enabled) return;
 
         Font font = mc.font;
         int baseX = HudConfig.x;
