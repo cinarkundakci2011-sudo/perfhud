@@ -8,11 +8,15 @@ import net.minecraft.network.chat.Component;
 
 public class HudRenderer {
 
+    // Removed the "implements HudElement" line; we are treating this as a pure functional method target
     public static void render(GuiGraphicsExtractor graphics, DeltaTracker tickCounter) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.options.hudHidden || !HudConfig.enabled || mc.player == null) return;
+        
+        // Fabric API automatically handles hiding this layer when the HUD is toggled via F1.
+        // We only need to check our custom toggle and player existence.
+        if (!HudConfig.enabled || mc.player == null) return;
 
-        Font font = mc.font; // Mojang mapped field name
+        Font font = mc.font;
         int baseX = HudConfig.x;
         int baseY = HudConfig.y;
 
@@ -34,7 +38,6 @@ public class HudRenderer {
         int size = 20;
         int gap = 2;
 
-        // Uses official Mojang mapping method signatures (.isDown())
         boolean W = mc.options.keyUp.isDown();
         boolean A = mc.options.keyLeft.isDown();
         boolean S = mc.options.keyDown.isDown();
