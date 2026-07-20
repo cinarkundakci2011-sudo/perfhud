@@ -6,26 +6,25 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import com.example.perfhud.util.CpsTracker;
-import org.lwjgl.glfw.GLFW; // Added GLFW import
+import org.lwjgl.glfw.GLFW;
 
 public class HudRenderer {
-    private static boolean wasOPressed = false; // Add tracking field
+    private static boolean wasOPressed = false;
 
     public static void render(GuiGraphicsExtractor graphics, DeltaTracker tickCounter) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
 
-        // Native Hotkey Hook: Pressing 'O' opens the configuration editor screen smoothly
-        long windowHandle = mc.getWindow().getWindow();
+        // Native Hotkey Hook matching the updated engine architecture
+        long windowHandle = mc.getWindow().getNativeWindow(); // Fixed to use modern handle getter
         boolean isOPressed = GLFW.glfwGetKey(windowHandle, GLFW.GLFW_KEY_O) == GLFW.GLFW_PRESS;
         if (isOPressed && !wasOPressed) {
-            if (mc.screen == null) {
-                mc.setScreen(new HudConfigScreen());
+            if (mc.gui.screen() == null) { // Fixed to look at sub-layer interface
+                mc.setScreenAndShow(new HudConfigScreen()); // Fixed method designation target
             }
         }
         wasOPressed = isOPressed;
 
-        // If configuration turned off the render execution, leave immediately
         if (!HudConfig.enabled) return;
 
         Font font = mc.font;
