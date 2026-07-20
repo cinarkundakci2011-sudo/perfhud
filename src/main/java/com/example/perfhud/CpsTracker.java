@@ -1,27 +1,28 @@
-package com.example.perfhud;
+package com.example.perfhud.util;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class CpsTracker {
-    private static final List<Long> leftClicks = new ArrayList<>();
-    private static final List<Long> rightClicks = new ArrayList<>();
+    private static final ConcurrentLinkedQueue<Long> LEFT_CLICKS = new ConcurrentLinkedQueue<>();
+    private static final ConcurrentLinkedQueue<Long> RIGHT_CLICKS = new ConcurrentLinkedQueue<>();
 
-    public static synchronized void addLeftClick() { leftClicks.add(System.currentTimeMillis()); }
-    public static synchronized void addRightClick() { rightClicks.add(System.currentTimeMillis()); }
-
-    public static synchronized int getLeftCps() {
-        cleanOldClicks(leftClicks);
-        return leftClicks.size();
+    public static void addLeftClick() {
+        LEFT_CLICKS.add(System.currentTimeMillis());
     }
 
-    public static synchronized int getRightCps() {
-        cleanOldClicks(rightClicks);
-        return rightClicks.size();
+    public static void addRightClick() {
+        RIGHT_CLICKS.add(System.currentTimeMillis());
     }
 
-    private static void cleanOldClicks(List<Long> clickList) {
-        long limit = System.currentTimeMillis() - 1000;
-        clickList.removeIf(timestamp -> timestamp < limit);
+    public static int getLeftCps() {
+        long now = System.currentTimeMillis();
+        LEFT_CLICKS.removeIf(timestamp -> now - timestamp > 1000);
+        return LEFT_CLICKS.size();
+    }
+
+    public static int getRightCps() {
+        long now = System.currentTimeMillis();
+        RIGHT_CLICKS.removeIf(timestamp -> now - timestamp > 1000);
+        return RIGHT_CLICKS.size();
     }
 }
