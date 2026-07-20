@@ -5,6 +5,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
+import com.example.perfhud.util.CpsTracker; // <-- Added this import to find your new tracker
 
 public class HudRenderer {
 
