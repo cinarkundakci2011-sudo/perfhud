@@ -15,12 +15,12 @@ public class HudRenderer {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
 
-        // Native Hotkey Hook matching the updated engine architecture
-        long windowHandle = mc.getWindow().getNativeWindow(); // Fixed to use modern handle getter
+        // Ultimate Mapping Bypass: Pulls the handle directly from the active OpenGL render context
+        long windowHandle = GLFW.glfwGetCurrentContext(); 
         boolean isOPressed = GLFW.glfwGetKey(windowHandle, GLFW.GLFW_KEY_O) == GLFW.GLFW_PRESS;
         if (isOPressed && !wasOPressed) {
-            if (mc.gui.screen() == null) { // Fixed to look at sub-layer interface
-                mc.setScreenAndShow(new HudConfigScreen()); // Fixed method designation target
+            if (mc.gui.screen() == null) { 
+                mc.setScreenAndShow(new HudConfigScreen()); 
             }
         }
         wasOPressed = isOPressed;
