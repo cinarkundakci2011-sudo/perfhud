@@ -22,9 +22,9 @@ public class HudConfigScreen extends Screen {
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         super.extractRenderState(graphics, mouseX, mouseY, delta);
         Minecraft mc = Minecraft.getInstance();
-        long window = mc.getWindow().getWindow();
+        long window = mc.getWindow().getNativeWindow(); // Fixed to use modern handle getter
 
-        // 1. Direct Input Polling - Completely avoids version-locked MouseEvent signatures
+        // Direct Input Polling
         boolean isMouseDown = GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
         
         int centerX = this.width / 2;
@@ -42,7 +42,7 @@ public class HudConfigScreen extends Screen {
                 // Check if options toggle button is clicked
                 if (clickCooldown == 0 && mouseX >= left + 10 && mouseX <= left + 190 && mouseY >= top + 32 && mouseY <= top + 52) {
                     HudConfig.enabled = !HudConfig.enabled;
-                    clickCooldown = 10; // Input debounce
+                    clickCooldown = 10;
                 }
                 
                 // Check if HUD container is clicked for dragging
@@ -70,14 +70,11 @@ public class HudConfigScreen extends Screen {
             if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_RIGHT) == GLFW.GLFW_PRESS) { HudConfig.x += 1; keyCooldown = 2; }
         }
 
-        // 2. Render Screen Layout Elements
-        graphics.fill(0, 0, this.width, this.height, 0x66000000); // Overlay tint
-        HudRenderer.render(graphics, null); // Render active preview layout
+        graphics.fill(0, 0, this.width, this.height, 0x66000000); 
+        HudRenderer.render(graphics, null); 
 
-        // Visual Drag Boundary Outline
         graphics.fill(HudConfig.x - 2, HudConfig.y - 2, HudConfig.x + 132, HudConfig.y + 112, 0x33FFFF00);
 
-        // Control Window Box
         graphics.fill(left, top, left + menuWidth, top + menuHeight, 0xDD000000);
         graphics.text(mc.font, Component.literal("⚙ PerfHud Options"), left + 10, top + 10, 0xFFFF5555);
         
@@ -91,7 +88,7 @@ public class HudConfigScreen extends Screen {
     }
 
     @Override
-    public boolean shouldPause() {
+    public boolean isPauseScreen() { // Fixed mapping signature name
         return false;
     }
 }
