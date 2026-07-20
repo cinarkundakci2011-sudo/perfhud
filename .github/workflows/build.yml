@@ -22,11 +22,11 @@ jobs:
         java-version: '25'
         distribution: 'temurin'
 
-    # 3. Use Gradle 9.2 which officially supports running under Java 25
+    # 3. Automatically fetch the latest stable Gradle distribution
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
       with:
-        gradle-version: '9.2'
+        gradle-version: 'latest'
 
     # 4. Run the build process
     - name: Build Mod File
