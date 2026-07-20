@@ -10,11 +10,11 @@ public class PerformanceHudClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        // This will now accept your renderer out-of-the-box
+        // Passing the method reference satisfies the functional interface cleanly
         HudElementRegistry.attachElementBefore(
             VanillaHudElements.CHAT,
             Identifier.fromNamespaceAndPath(MOD_ID, "hud_overlay"),
-            new HudRenderer()
+            HudRenderer::render
         );
     }
 }
