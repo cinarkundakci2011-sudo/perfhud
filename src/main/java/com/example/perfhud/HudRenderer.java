@@ -10,7 +10,7 @@ public class HudRenderer {
 
     public static void render(GuiGraphicsExtractor graphics, DeltaTracker tickCounter) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.options.hideHidden || !HudConfig.enabled || mc.player == null) return;
+        if (mc.options.hudHidden || !HudConfig.enabled || mc.player == null) return;
 
         Font font = mc.font; // Mojang mapped field name
         int baseX = HudConfig.x;
