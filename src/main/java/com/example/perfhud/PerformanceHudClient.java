@@ -3,32 +3,30 @@ package com.example.perfhud;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.KeyMapping; // Mojang Mapping fix
+import com.mojang.blaze3d.platform.InputConstants; // Mojang Mapping fix
 import org.lwjgl.glfw.GLFW;
 
-public class PerfHudClient implements ClientModInitializer {
-    private static KeyBinding configKeyBinding;
+public class PerformanceHudClient implements ClientModInitializer { // Fixed class name mismatch
+    private static KeyMapping configKeyBinding; 
 
     @Override
     public void onInitializeClient() {
-        // 1. Register the "O" key as the configuration menu hotkey
-        configKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        // Register the "O" key as the configuration menu hotkey
+        configKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyMapping(
             "key.perfhud.config", 
-            InputUtil.Type.KEYSYM, 
+            InputConstants.Type.KEYSYM, 
             GLFW.GLFW_KEY_O, 
             "category.perfhud"
         ));
 
-        // 2. Listen to ticks so that pressing the key instantly invokes the GUI screen
+        // Listen to ticks to catch the input trigger
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (configKeyBinding.wasPressed()) {
-                if (client.currentScreen == null) {
-                    client.setScreen(new HudConfigScreen());
+            while (configKeyBinding.consumeClick()) { // Mojang mapping variant of wasPressed()
+                if (client.gui.screen() == null) { // Minecraft 26.2 field relocation fix
+                    client.setScreenAndShow(new HudConfigScreen()); // Minecraft 26.2 method change fix
                 }
             }
         });
-        
-        // Your existing Hud rendering callback hook remains untouched here...
     }
 }
