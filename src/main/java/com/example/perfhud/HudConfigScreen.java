@@ -1,9 +1,11 @@
 package com.example.perfhud;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screens.Screen; // Mojang mapping package fix
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents; // Mojang mapping package fix
+import net.minecraft.client.resources.sounds.PositionedSoundInstance; // Mojang mapping package fix
 import org.lwjgl.glfw.GLFW;
 
 public class HudConfigScreen extends Screen {
@@ -15,8 +17,10 @@ public class HudConfigScreen extends Screen {
         super(Component.literal("PerfHud Configuration"));
     }
 
+    // Minecraft 26.2 relocated screen frame rendering to extractRenderState
     @Override
-    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+        super.extractRenderState(graphics, mouseX, mouseY, delta);
         Minecraft mc = Minecraft.getInstance();
         
         // 1. Draw a semi-transparent dark background tint over the game
@@ -27,7 +31,7 @@ public class HudConfigScreen extends Screen {
 
         // 3. Draw a visual anchor/border around the HUD box so the user knows it can be dragged
         int hudWidth = 130;
-        int hudHeight = 110; // Approximate height including keystroke layout
+        int hudHeight = 110; 
         graphics.fill(HudConfig.x - 2, HudConfig.y - 2, HudConfig.x + hudWidth + 2, HudConfig.y + hudHeight + 2, 0x33FFFF00);
 
         // 4. Render the Configuration Control Window in the center of the screen
@@ -56,8 +60,6 @@ public class HudConfigScreen extends Screen {
         // Instructions
         graphics.text(mc.font, Component.literal("🖱 Click & Drag the HUD to reposition"), left + 10, top + 60, 0xFF999999);
         graphics.text(mc.font, Component.literal("⌨ Use Arrow Keys for fine tuning"), left + 10, top + 74, 0xFF999999);
-
-        super.render(graphics, mouseX, mouseY, delta);
     }
 
     @Override
@@ -70,8 +72,8 @@ public class HudConfigScreen extends Screen {
         // Click detection: Check if toggle button is clicked
         if (mouseX >= left + 10 && mouseX <= left + 190 && mouseY >= top + 32 && mouseY <= top + 52) {
             HudConfig.enabled = !HudConfig.enabled;
-            Minecraft.getInstance().getSoundManager().play(net.minecraft.client.sound.PositionedSoundInstance.master(
-                net.minecraft.sound.SoundEvents.UI_BUTTON_CLICK, 1.0F
+            Minecraft.getInstance().getSoundManager().play(PositionedSoundInstance.master(
+                SoundEvents.UI_BUTTON_CLICK, 1.0F
             ));
             return true;
         }
@@ -105,7 +107,6 @@ public class HudConfigScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        // Pixel-perfect micro adjustments using arrow keys
         if (keyCode == GLFW.GLFW_KEY_UP) HudConfig.y -= 1;
         if (keyCode == GLFW.GLFW_KEY_DOWN) HudConfig.y += 1;
         if (keyCode == GLFW.GLFW_KEY_LEFT) HudConfig.x -= 1;
@@ -116,6 +117,6 @@ public class HudConfigScreen extends Screen {
 
     @Override
     public boolean shouldPause() {
-        return false; // Prevents singleplayer game from freezing while customizing
+        return false; 
     }
 }
