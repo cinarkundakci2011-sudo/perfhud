@@ -3,7 +3,7 @@
   "package": "com.example.perfhud.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "MouseMixin"
+    "MouseHandlerMixin"
   ],
   "client": [],
   "injectors": {
