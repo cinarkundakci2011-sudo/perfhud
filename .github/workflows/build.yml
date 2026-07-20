@@ -22,19 +22,17 @@ jobs:
         java-version: '25'
         distribution: 'temurin'
 
-    # 3. Setup and cache Gradle to speed up subsequent builds
+    # 3. Force GitHub to supply a modern version of Gradle directly
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
+      with:
+        gradle-version: '8.12'
 
-    # 4. Make sure the Linux runner has permission to execute the Gradle wrapper
-    - name: Grant Execute Permission for Gradlew
-      run: chmod +x gradlew
-
-    # 5. Run the build process
+    # 4. Run the build process using the global 'gradle' command (no "./gradlew")
     - name: Build Mod File
-      run: ./gradlew build
+      run: gradle build
 
-    # 6. Upload the generated .jar so you can download it from GitHub
+    # 5. Upload the generated .jar so you can download it from GitHub
     - name: Upload Mod Artifact
       uses: actions/upload-artifact@v4
       with:
