@@ -1,0 +1,33 @@
+pluginManagement {
+    repositories {
+        // Tells Gradle to check Fabric's official server for the Loom plugin
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+        // Fallback to standard plugins
+        gradlePluginPortal()
+    }
+}
+
+plugins {
+    // Loom requires the fabric-mixinextras helper in modern environments
+    id "io.github.llamalad7.mixinextras" version "0.4.1"
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+        maven {
+            name = 'Mojang'
+            url = 'https://libraries.minecraft.net/'
+        }
+    }
+}
+
+rootProject.name = 'perfhud'
