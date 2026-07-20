@@ -12,11 +12,10 @@ public class HudRenderer {
         Minecraft mc = Minecraft.getInstance();
         if (mc.options.hideGui || !HudConfig.enabled || mc.player == null) return;
 
-        Font font = mc.getFont(); // Updated from getTextRenderer() to getFont()
+        Font font = mc.font; // Mojang mapped field name
         int baseX = HudConfig.x;
         int baseY = HudConfig.y;
 
-        // 1. Calculate and fetch standard network/performance updates
         int fps = mc.getFps();
         int ping = 0;
         if (mc.getConnection() != null) {
@@ -27,38 +26,32 @@ public class HudRenderer {
         String stats = String.format("FPS: %d | Ping: %dms", fps, ping);
         String cps = String.format("CPS: %d L | %d R", CpsTracker.getLeftCps(), CpsTracker.getRightCps());
 
-        // Display Info Plate
         graphics.fill(baseX, baseY, baseX + 130, baseY + 26, HudConfig.backgroundColor);
         graphics.text(font, Component.literal(stats), baseX + 5, baseY + 4, HudConfig.textColor);
         graphics.text(font, Component.literal(cps), baseX + 5, baseY + 14, HudConfig.textColor);
 
-        // 2. Map Key Configurations
         int startKeyY = baseY + 30;
         int size = 20;
         int gap = 2;
 
-        boolean W = mc.options.keyUp.isPressed();
-        boolean A = mc.options.keyLeft.isPressed();
-        boolean S = mc.options.keyDown.isPressed();
-        boolean D = mc.options.keyRight.isPressed();
-        boolean SPACE = mc.options.keyJump.isPressed();
-        boolean LMB = mc.options.keyAttack.isPressed();
-        boolean RMB = mc.options.keyUse.isPressed();
+        // Uses official Mojang mapping method signatures (.isDown())
+        boolean W = mc.options.keyUp.isDown();
+        boolean A = mc.options.keyLeft.isDown();
+        boolean S = mc.options.keyDown.isDown();
+        boolean D = mc.options.keyRight.isDown();
+        boolean SPACE = mc.options.keyJump.isDown();
+        boolean LMB = mc.options.keyAttack.isDown();
+        boolean RMB = mc.options.keyUse.isDown();
 
-        // Row 1: W
         drawIndividualKey(graphics, font, "W", baseX + size + gap, startKeyY, size, size, W);
-
-        // Row 2: A, S, D
         drawIndividualKey(graphics, font, "A", baseX, startKeyY + size + gap, size, size, A);
         drawIndividualKey(graphics, font, "S", baseX + size + gap, startKeyY + size + gap, size, size, S);
         drawIndividualKey(graphics, font, "D", baseX + (size + gap) * 2, startKeyY + size + gap, size, size, D);
 
-        // Row 3: Mouse Triggers
         int splitMouseWidth = ((size * 3) + (gap * 2) - gap) / 2;
         drawIndividualKey(graphics, font, "LMB", baseX, startKeyY + (size + gap) * 2, splitMouseWidth, size, LMB);
         drawIndividualKey(graphics, font, "RMB", baseX + splitMouseWidth + gap, startKeyY + (size + gap) * 2, splitMouseWidth, size, RMB);
 
-        // Row 4: Spacebar Layout
         int spaceBarWidth = (size * 3) + (gap * 2);
         drawIndividualKey(graphics, font, "_______", baseX, startKeyY + (size + gap) * 3, spaceBarWidth, 14, SPACE);
     }
