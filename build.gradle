@@ -10,7 +10,6 @@ base {
     archivesName = project.archives_base_name
 }
 
-// Relocating repositories here gives Fabric Loom full flexibility to map mod binaries
 repositories {
     mavenCentral()
     maven {
@@ -26,8 +25,12 @@ repositories {
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     
-    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    // 1. Map name symbols cleanly using Mojang's naming convention
+    mappings loom.officialMojangMappings()
+    
+    // 2. Swapped to modImplementation to expose API classes during compilation
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 }
 
 processResources {
