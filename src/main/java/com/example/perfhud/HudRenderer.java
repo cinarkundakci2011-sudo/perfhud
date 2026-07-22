@@ -6,25 +6,12 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import com.example.perfhud.util.CpsTracker;
-import org.lwjgl.glfw.GLFW;
 
 public class HudRenderer {
-    private static boolean wasOPressed = false;
 
     public static void render(GuiGraphicsExtractor graphics, DeltaTracker tickCounter) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
-
-        // Ultimate Mapping Bypass: Pulls the handle directly from the active OpenGL render context
-        long windowHandle = GLFW.glfwGetCurrentContext(); 
-        boolean isOPressed = GLFW.glfwGetKey(windowHandle, GLFW.GLFW_KEY_O) == GLFW.GLFW_PRESS;
-        if (isOPressed && !wasOPressed) {
-            if (mc.gui.screen() == null) { 
-                mc.setScreenAndShow(new HudConfigScreen()); 
-            }
-        }
-        wasOPressed = isOPressed;
-
         if (!HudConfig.enabled) return;
 
         Font font = mc.font;
