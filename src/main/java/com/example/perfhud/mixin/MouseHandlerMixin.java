@@ -24,13 +24,12 @@ public class MouseHandlerMixin {
     }
 
     // Fallback signature for alternative mappings
-    @Inject(method = "onPress", at = @At("HEAD"), require = 0)
-    private void onMousePress(long windowPointer, int button, int action, int modifiers, CallbackInfo ci) {
-        if (action == GLFW.GLFW_PRESS) {
-            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                CpsTracker.onClickLeft();
-            } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-                CpsTracker.onClickRight();
+        import net.minecraft.client.input.MouseButtonInfo;
+        
+        @Inject(method = "onMouseButton", at = @At("HEAD"))
+        private void onMouseButton(long window, MouseButtonInfo buttonInfo, int action, CallbackInfo ci) {
+            if (action == GLFW.GLFW_PRESS) {
+                CpsTracker.onMouseClick(buttonInfo.button());
             }
         }
     }
